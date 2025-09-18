@@ -1,0 +1,54 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8">
+  <title>Confirmação de Agendamento</title>
+  <style>
+    body { font-family: Arial; background: #f2f2f2; display:flex; justify-content:center; align-items:center; height:100vh; }
+    .card { background:#fff; padding:20px; border-radius:12px; box-shadow:0 4px 10px rgba(0,0,0,0.1); text-align:center; width:350px; }
+    h2 { color:#333; }
+    p { margin:8px 0; font-size:16px; }
+    .btn-whatsapp { margin-top:15px; padding:10px 20px; background:#25D366; color:#fff; border-radius:8px; text-decoration:none; display:inline-block; font-weight:bold; }
+  </style>
+</head>
+<body>
+
+  <div class="card" id="agendamento" style="display:none;">
+    <h2>Agendamento Encontrado ✅</h2>
+    <p>Nome: <span id="nome"></span></p>
+    <p>Data: <span id="data"></span></p>
+    <p>Hora: <span id="hora"></span></p>
+    <p>Telefone: <span id="telefone"></span></p>
+    <a id="whatsapp-link" href="#" class="btn-whatsapp" target="_blank">Confirmar via WhatsApp</a>
+  </div>
+
+  <div class="card" id="nao-encontrado" style="display:none;">
+    <h2>Agendamento não encontrado ❌</h2>
+    <p>Verifique se o ID está correto.</p>
+  </div>
+
+  <script>
+    const urlParams = new URLSearchParams(window.location.search);
+    const id = urlParams.get('id');
+
+    const consulta = JSON.parse(localStorage.getItem(id));
+
+    if (consulta) {
+      document.getElementById('nome').innerText = consulta.nome;
+      document.getElementById('data').innerText = consulta.data;
+      document.getElementById('hora').innerText = consulta.hora;
+      document.getElementById('telefone').innerText = consulta.telefone;
+
+      const whatsappLink = `https://wa.me/55${consulta.telefone}?text=${encodeURIComponent('Olá ' + consulta.nome + ', confirmando minha consulta em ' + consulta.data + ' às ' + consulta.hora)}`;
+      document.getElementById('whatsapp-link').href = whatsappLink;
+
+      document.getElementById('agendamento').style.display = 'block';
+      document.getElementById('nao-encontrado').style.display = 'none';
+    } else {
+      document.getElementById('agendamento').style.display = 'none';
+      document.getElementById('nao-encontrado').style.display = 'block';
+    }
+  </script>
+
+</body>
+</html>

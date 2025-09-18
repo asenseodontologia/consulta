@@ -1,0 +1,50 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8">
+  <title>Cadastro de Consulta</title>
+</head>
+<body>
+  <h2>Cadastrar Consulta</h2>
+  <form id="formConsulta">
+    <input type="text" id="nome" placeholder="Nome do paciente" required><br>
+    <input type="date" id="data" required><br>
+    <input type="time" id="hora" required><br>
+    <input type="tel" id="telefone" placeholder="WhatsApp (com DDD)" required><br>
+    <button type="submit">Salvar</button>
+  </form>
+
+  <p id="link"></p>
+
+  <script>
+    document.getElementById("formConsulta").addEventListener("submit", function(e){
+      e.preventDefault();
+      
+      const nome = document.getElementById("nome").value;
+      const data = document.getElementById("data").value;
+      const hora = document.getElementById("hora").value;
+      const telefone = document.getElementById("telefone").value.replace(/\D/g,''); // só números
+
+      const id = telefone; // ID = telefone
+      const consulta = { id, nome, data, hora, telefone, confirmado:false };
+
+      // Salvar no localStorage
+      localStorage.setItem(id, JSON.stringify(consulta));
+
+      const linkConfirmacao = `https://luanabani.github.io/consulta/confirma.html?id=${id}`;
+
+      // Mensagem pronta do WhatsApp
+      const msg = `Olá ${nome}, sua consulta está marcada para ${data} às ${hora}.
+Confirme aqui: ${linkConfirmacao}`;
+
+      const linkWhats = `https://wa.me/55${telefone}?text=${encodeURIComponent(msg)}`;
+
+      document.getElementById("link").innerHTML = `
+        <p>Link de confirmação: <a href="${linkConfirmacao}" target="_blank">${linkConfirmacao}</a></p>
+        <p><a href="${linkWhats}" target="_blank">Enviar pelo WhatsApp</a></p>
+      `;
+    });
+  </script>
+</body>
+</html>
+</html>
